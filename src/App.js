@@ -14,9 +14,11 @@ import {
 
 export default function App() {
   async function handleLikeRepository(id) {
-    await api.post(`/repositories/${id}/like`);
-    const { data: updatedRepos } = await api.get("/repositories");
-    setData(updatedRepos);
+    const { data: updatedRepo } = await api.post(`/repositories/${id}/like`);
+    setData((prevData) => [
+      ...prevData.filter((item) => item.id !== id),
+      updatedRepo,
+    ]);
   }
 
   const [data, setData] = useState([]);
@@ -50,7 +52,7 @@ export default function App() {
                   style={styles.likeText}
                   testID={`repository-likes-${item.id}`}
                 >
-                  {item.likes}
+                  {`${item.likes} ${item.likes === 1 ? "curtida" : "curtidas"}`}
                 </Text>
               </View>
 
